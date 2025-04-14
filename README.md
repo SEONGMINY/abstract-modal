@@ -1,22 +1,23 @@
 # 서론
-[토스ㅣSLASH 21 - 실무에서 바로 쓰는 Frontend Clean Code](https://www.youtube.com/watch?v=edWbHp_k_9Y)을 읽고 노션에 정리해 보았습니다([링크](https://ionian-breath-903.notion.site/8925e7eb179e48b389e47d1143e429d4?pvs=4)) 더 나아가 해당 내용을 토대로 모달 컴포넌트를 설계 해보려고 합니다.
+[토스ㅣSLASH 21 - 실무에서 바로 쓰는 Frontend Clean Code](https://www.youtube.com/watch?v=edWbHp_k_9Y)을 읽고 노션에 정리해 보았습니다([링크](https://ionian-breath-903.notion.site/8925e7eb179e48b389e47d1143e429d4?pvs=4)) 
+해당 내용을 토대로 모달 컴포넌트를 설계하였습니다
 
 # 모달 컴포넌트의 추상화
-`모달` 컴포넌트를 추상화하는 목적은 복잡한 핵심 개념만을 남기고, 재사용 가능하며 유지 보수가 용이한 코드를 작성하는 것입니다. 모달 컴포넌트를 추상화 했을 때 핵심 개념은 `열기`와 `닫기`입니다.
+`모달` 컴포넌트를 추상화하는 목적은 복잡한 핵심 개념만을 남기고, 재사용 가능하며 유지 보수가 용이한 코드를 작성하는 것입니다. 모달 컴포넌트를 추상화 했을 때 핵심 개념은 `열기`와 `닫기`입니다
 
 ### 모달 컴포넌트 추상화 과정
 
 1. **상태 관리**
-   - 모달의 상태를 전역에서 관리하기 위해 `Recoil`의 `atom`을 사용합니다.
-   - 모달의 상태는 열려 있는 모든 모달의 리스트로 관리됩니다.
+   - 모달의 상태를 전역에서 관리하기 위해 `Recoil`의 `atom`을 사용합니다
+   - 모달의 상태는 열려 있는 모든 모달의 리스트로 관리됩니다
 
 2. **모달 열기와 닫기 함수**
-   - 모달을 열고 닫는 로직을 재사용 가능하도록 훅으로 추상화합니다.
-   - `useModal` 훅을 만들어 모달을 열고 닫는 기능을 제공합니다.
+   - 모달을 열고 닫는 로직을 재사용 가능하도록 훅으로 추상화합니다
+   - `useModal` 훅을 만들어 모달을 열고 닫는 기능을 제공합니다
 
 ### 상태 관리
 
-모달의 상태를 관리하기 위해 `Recoil`을 사용하여 전역 상태를 설정합니다.
+모달의 상태를 관리하기 위해 `Recoil`을 사용하여 전역 상태를 설정합니다
 
 ```typescript
 import { ComponentProps, FunctionComponent } from 'react';
@@ -33,11 +34,11 @@ export const modalState = atom<
 });
 ```
 
-`modalState`는 현재 열려 있는 모달의 리스트를 관리합니다. 각 모달은 컴포넌트와 해당 컴포넌트에 전달될 props로 구성됩니다.
+`modalState`는 현재 열려 있는 모달의 리스트를 관리합니다. 각 모달은 컴포넌트와 해당 컴포넌트에 전달될 props로 구성됩니다
 
 ### 모달 열기와 닫기 함수
 
-모달을 열고 닫는 로직을 `useModal` 훅으로 추상화합니다.
+모달을 열고 닫는 로직을 `useModal` 훅으로 추상화합니다
 
 ```typescript
 import { modalState } from '@states/modal';
@@ -71,12 +72,12 @@ const useModal = () => {
 export default useModal;
 ```
 
-- `openModal`: 특정 모달 컴포넌트를 열기 위해 사용됩니다. 모달 컴포넌트와 그에 전달될 props를 받아 상태에 추가합니다.
-- `closeModal`: 특정 모달 컴포넌트를 닫기 위해 사용됩니다. 모달 컴포넌트를 상태에서 제거합니다.
+- `openModal`: 특정 모달 컴포넌트를 열기 위해 사용됩니다. 모달 컴포넌트와 그에 전달될 props를 받아 상태에 추가합니다
+- `closeModal`: 특정 모달 컴포넌트를 닫기 위해 사용됩니다. 모달 컴포넌트를 상태에서 제거합니다
 
 ### 모달 사용 예시
 
-추상화된 모달을 사용하는 방법을 보여줍니다.
+추상화된 모달을 사용하는 방법을 보여줍니다
 ```typescript
 interface Props {
   text: string;
@@ -122,11 +123,5 @@ const Home = () => {
 export default Home;
 ```
 
-- `openModal` 함수는 `TestModalComponent`와 그에 전달될 props를 받아 모달을 엽니다.
-- `closeModal` 함수는 `TestModalComponent`를 닫습니다.
-
-### 모달 컴포넌트 추상화의 장점
-
-1. **재사용성**: 동일한 모달 로직을 여러 곳에서 재사용할 수 있습니다.
-2. **유지 보수성**: 모달 로직을 한 곳에서 관리하기 때문에 유지 보수가 용이합니다.
-3. **가독성**: 모달 관련 코드를 별도의 훅으로 분리하여 코드의 가독성을 높입니다.
+- `openModal` 함수는 `TestModalComponent`와 그에 전달될 props를 받아 모달을 엽니다
+- `closeModal` 함수는 `TestModalComponent`를 닫습니다
